@@ -1,6 +1,6 @@
 #! /usr/bin/php
 <?php
-
+date_default_timezone_set("UTC");
 // This file will send all unsent reminders when run via cron job
 require('/var/www/condin/lib/remind.me/db.php');
 
@@ -11,13 +11,13 @@ try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // get now because apparently "NOW()" doesn't do shit
-    $now = new DateTime(strtotime('now'));
 
-    $stmt = $conn->prepare('SELECT MessageID, ReminderText, ToNum FROM Reminders WHERE Sent=0 AND TSDeliver<=:now');
-    $stmt->execute(array(':now' => $now->format('Y-m-d H:i:s')));
+    $stmt = $conn->prepare('SELECT MessageID, ReminderText, ToNum FROM Reminders WHERE Sent=0 AND TSDeliver<=":now"');
+    $stmt->execute(array(':now' => date("Y-m-d H:i:s")));
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (empty($results)) {
+        echo "No Messages to send.";
         exit();
     }
 
