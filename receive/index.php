@@ -12,7 +12,7 @@ $time = $r['time'];
 if ($reminder_text !== NULL && $time !== NULL) {
     // now find the time to send the reminder by accounting for timezone bullshit
     // first get the location of the zip the number was sent from
-    // http://maps.googleapis.com/maps/api/geocode/json?components=postal_code:70460&sensor=false
+    // http://maps.googleapis.com/maps/api/geocode/json?components=postal_code:90210&sensor=false
 
     $ch = curl_init();
 
