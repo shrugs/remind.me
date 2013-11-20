@@ -12,7 +12,7 @@ try {
 
     // get now because apparently "NOW()" doesn't do shit
 
-    $stmt = $conn->prepare('SELECT MessageID, ReminderText, ToNum FROM Reminders WHERE Sent=0 AND TSDeliver<=":now"');
+    $stmt = $conn->prepare('SELECT MessageID, ReminderText, ToNum FROM Reminders WHERE Sent=0 AND TSDeliver<=:now');
     $stmt->execute(array(':now' => date("Y-m-d H:i:s")));
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
