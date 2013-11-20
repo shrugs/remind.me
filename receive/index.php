@@ -96,7 +96,7 @@ if ($reminder_text !== NULL && $time !== NULL) {
     if ($reminder_text !== NULL && $time !== NULL) {
         echo "<Message>";
 
-            echo "We'll remind you to " . $reminder_text . $local->format('l') . ' the ' . $local->format('jS') . ' of ' . $local->format('F') . ' at ' . $local->format('g:ia');
+            echo "We'll remind you to " . $reminder_text . ' ' . $local->format('l') . ' the ' . $local->format('jS') . ' of ' . $local->format('F') . ' at ' . $local->format('g:ia');
 
         echo "</Message>";
     } else {
