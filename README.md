@@ -13,4 +13,4 @@ A reminder service for dumbphones that allows one to set reminders by typing nor
 - etc...
 
 #Thanks
- Huge thanks to (http://timeapi.org)[timeapi.org], which is powered by (https://github.com/mojombo/chronic)[Chronic].
+ Huge thanks to [timeapi.org](http://timeapi.org), which is powered by [Chronic](https://github.com/mojombo/chronic).
