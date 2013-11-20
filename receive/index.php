@@ -1,10 +1,7 @@
 <?php
 
-
-
 require('RemindMe.php');
 require('Timezones.php');
-
 $text = $_POST['Body'];
 
 $remindme = new RemindMe();
@@ -44,17 +41,20 @@ if ($reminder_text !== NULL && $time !== NULL) {
     // http://www.timeapi.org/utc/in+two+hours
     $tzShortCode = strtolower((new TZ())->getCodeForTimeZone($timezoneResults['timeZoneName']));
     // set url
-    error_log($timezoneResults['timeZoneName'] . " -> " . $tzShortCode);
-    error_log("http://www.timeapi.org/".$tzShortCode."/" . urlencode($time));
     curl_setopt($ch, CURLOPT_URL, "http://www.timeapi.org/".$tzShortCode."/" . urlencode($time));
     //return the transfer as a string
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     // $output contains the output string
-    $time = curl_exec($ch);
+    $timeOut = curl_exec($ch);
     curl_close($ch);
 
-    if (strpos($time, "error") !== false) {
+    // if error in $time
+    if (strpos($timeOut, "error") !== false) {
         // oh noes...
+        error_log("ERROR: BAD TIME: " . $time);
+        exit();
+    } else {
+        $time = $timeOut;
     }
 
 
@@ -63,10 +63,29 @@ if ($reminder_text !== NULL && $time !== NULL) {
     $utcTime->setTimezone(new DateTimeZone('UTC'));
 
 
+    // SWEET NOW LOG THAT in the db
+
+    require('../../../lib/remind.me/db.php');
+    try {
+        $conn = new PDO("mysql:host=$db_host;dbname=$db_name;", $db_user, $db_pass);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $stmt = $conn->prepare('INSERT INTO Reminders (MessageID, ReminderText, ToNum, TSDeliver, Sent, TSAdded) VALUES (:MessageID, :ReminderText, :ToNum, :TSDeliver, 0, NOW())');
+        $stmt->execute(array(
+            ':MessageID' => (string)$_POST['MessageSid'],
+            ':ReminderText' => $reminder_text,
+            ':ToNum' => (string)$_POST['From'],
+            ':TSDeliver' => $utcTime->format('Y-m-d H:i:s')
+            ));
 
 
+    } catch(PDOException $e) {
+        error_log('ERROR: ' . $e->getMessage());
+        exit();
+    }
 
-}
+
+    }
 
     header("content-type: text/xml");
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
