@@ -49,7 +49,7 @@ if ($reminder_text !== NULL && $time !== NULL) {
     curl_close($ch);
 
     // if error in $time
-    if (strpos($timeOut, "error") !== false) {
+    if (strpos($timeOut, "Internal") !== false) {
         // oh noes...
         error_log("ERROR: BAD TIME: " . $time);
         exit();

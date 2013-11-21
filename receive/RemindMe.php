@@ -16,7 +16,7 @@ class RemindMe
 
             array(
                     //remind me to (take out the trash) in (3 hours)
-                    'regex' => '/^([rR]emind me to )?([\s\S]+?) in ([\s\S]+?)$/',
+                    'regex' => '/^([rR]emind me to )?([\s\S]+?) in ([\s\S]+)$/',
                     'reminder_text_index' => 2,
                     'time_index' => 3,
                     'add' => ' from now'
